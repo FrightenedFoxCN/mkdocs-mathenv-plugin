@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name='mkdocs-mathenv-plugin',
-    version='0.0.1',
+    version='0.0.2',
     author='FrightenedFoxCN',
     author_email='FrightenedFox@outlook.com',
     description='A MkDocs plugin that gives support for some math environments',
@@ -41,8 +41,8 @@ setup(
     },
     include_package_data=True,
     package_data={
-        'mkdocs_statistics_plugin': [
-            'templates/*.tex'
+        'mkdocs_mathenv_plugin': [
+            'templates/*.html'
         ]
     }
 )

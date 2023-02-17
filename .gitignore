@@ -1,0 +1,2 @@
+mkdocs_mathenv_plugin.egg-info/*
+mkdocs_mathenv_plugin/py_cache/*
