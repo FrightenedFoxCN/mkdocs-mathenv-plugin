@@ -1,0 +1,19 @@
+site_name: My Docs
+
+theme: 
+  name: 'material'
+  language: 'zh'
+  palette:
+    - scheme: slate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tasklist
+
+plugins:
+  - mathenv:
+      theorem:
+       enable: true
+       definition: "def"

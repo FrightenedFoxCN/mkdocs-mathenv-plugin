@@ -58,13 +58,20 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             
             return f"<center><p style=\"background-color: wheat\">{svg_str}</p></center>"
 
-        markdown = re.sub(r"\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
-        markdown = re.sub(r"\\lemma", "!!! success \"%s\"" % self.config.theorem.lemma, markdown)
-        markdown = re.sub(r"\\proposition", "!!! success \"%s\"" % self.config.theorem.proposition, markdown)
-        markdown = re.sub(r"\\definition", "!!! info \"%s\"" % self.config.theorem.definition, markdown)
-        markdown = re.sub(r"\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
+        markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
+        # fix possible use of "\theorem" when you don't need it
+        markdown = re.sub(r"\\\\theorem", r"\\theorem", markdown)
+        markdown = re.sub(r"(?<!\\)\\lemma", "!!! success \"%s\"" % self.config.theorem.lemma, markdown)
+        markdown = re.sub(r"\\\\lemma", r"\\lemma", markdown)
+        markdown = re.sub(r"(?<!\\)\\proposition", "!!! success \"%s\"" % self.config.theorem.proposition, markdown)
+        markdown = re.sub(r"\\\\proposition", r"\\proposition", markdown)
+        markdown = re.sub(r"(?<!\\)\\definition", "!!! info \"%s\"" % self.config.theorem.definition, markdown)
+        markdown = re.sub(r"\\\\definition", r"\\definition", markdown)
+        markdown = re.sub(r"(?<!\\)\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
+        markdown = re.sub(r"\\\\proof", r"\\proof", markdown)
 
-        markdown = re.sub(r"(\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
+        markdown = re.sub(r"((?<!\\)\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
+        markdown = re.sub(r"\\\\tikzcd", r"\\tikzcd", markdown)
 
         return markdown
 

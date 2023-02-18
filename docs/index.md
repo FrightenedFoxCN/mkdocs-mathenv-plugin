@@ -29,9 +29,28 @@ Currently only theorem is supported.
 Set the paragraph as definition/lemma/theorem/proof/proposition by something like:
 
 ```
-\theorem
+\\theorem
     here is a theorem
 ```
+
+\theorem
+    here is a theorem
+
+```
+\\definition
+    here is a definition
+```
+
+\definition
+    here is a definition
+
+```
+\\proof
+    here is a proof
+```
+
+\proof
+    here is a proof (can be collapsed)
 
 Configurations:
 
@@ -50,23 +69,17 @@ markdown_extensions:
 ### TikZcd environment
 
 ```
+\\tikzcd
+    \mathsf{DA} \arrow[rr, bend left]{}{\bar 2} \arrow[dd]{}{U}& \perp & \mathsf{DA^{\mathrm{op}}} \arrow[ll, bend left]{}{\bar 2^{\mathrm{op}}}\arrow[dd]{}{U}\\
+    & & \\
+    \mathsf{Set} \arrow[rr, bend left]{}{2} & \perp & \mathsf{Set^{\mathrm{op}}} \arrow[ll, bend left]{}{2^{\mathrm{op}}}
+```
+
 \tikzcd
     \mathsf{DA} \arrow[rr, bend left]{}{\bar 2} \arrow[dd]{}{U}& \perp & \mathsf{DA^{\mathrm{op}}} \arrow[ll, bend left]{}{\bar 2^{\mathrm{op}}}\arrow[dd]{}{U}\\
     & & \\
-    \mathsf{Set} \arrow[rr, bend left]{}{2} & \perp & \mathsf{Set^{\mathrm{op}}} \arrow[ll, bend left]{}{2^{\mathrm{op}}}\\
-```
+    \mathsf{Set} \arrow[rr, bend left]{}{2} & \perp & \mathsf{Set^{\mathrm{op}}} \arrow[ll, bend left]{}{2^{\mathrm{op}}}
 
 Requires xelatex and dvisvgm to work properly.
 
 We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage.
-
-## TODO
-
-Too much things to do yet!
-
-- [ ] write specialized css for theorem environment
-- [ ] add tikz support via local compilation
-- [x] fix tikzcd picture problem
-- [ ] add tikzcd configurations: especially night mode
-- [ ] add svg support in css
-- [ ] fix theorem environment: \theorem in codeblock, etc.
