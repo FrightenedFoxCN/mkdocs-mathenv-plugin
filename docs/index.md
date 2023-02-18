@@ -66,6 +66,9 @@ markdown_extensions:
   - pymdownx.superfences
 ```
 
+!!! warning
+    In the rare case where you'd like to use "\\theorem" directly, use "\\\\theorem" instead, even in the code snipet. I know it's disturbing, but it requires some effort to fix it since parsing markdown is quite annoying.
+
 ### TikZcd environment
 
 ```
@@ -83,3 +86,26 @@ markdown_extensions:
 Requires xelatex and dvisvgm to work properly.
 
 We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage.
+
+TikZcd can be embedded into other environments:
+
+```
+\\definition
+    The automaton is reachable if and only if $r$ is surjective. The automaton is observable if and only if $o$ is injective. 
+
+    \\tikzcd
+        1 \arrow[rd]{}{i} \arrow[d]{}{\varepsilon}&      & 2\\
+        \Sigma^\ast \arrow[r, dashed]{}{r} \arrow[d]{}{\alpha} & K \arrow[ru]{}{f} \arrow[r, dashed]{}{o} \arrow[d]{}{t} & 2^{\Sigma^\ast} \arrow[u]{}{\varepsilon?} \arrow[d]{}{\beta}\\
+        (\Sigma^\ast)^\Sigma \arrow[r, dashed]{}{r^\Sigma} & K^\Sigma \arrow[r, dashed]{}{o^\Sigma} & (2^{\Sigma^\ast})^\Sigma
+```
+
+\definition
+    The automaton is reachable if and only if $r$ is surjective. The automaton is observable if and only if $o$ is injective. 
+
+    \tikzcd
+        1 \arrow[rd]{}{i} \arrow[d]{}{\varepsilon}&      & 2\\
+        \Sigma^\ast \arrow[r, dashed]{}{r} \arrow[d]{}{\alpha} & K \arrow[ru]{}{f} \arrow[r, dashed]{}{o} \arrow[d]{}{t} & 2^{\Sigma^\ast} \arrow[u]{}{\varepsilon?} \arrow[d]{}{\beta}\\
+        (\Sigma^\ast)^\Sigma \arrow[r, dashed]{}{r^\Sigma} & K^\Sigma \arrow[r, dashed]{}{o^\Sigma} & (2^{\Sigma^\ast})^\Sigma
+
+!!! warning
+    An indented block after tikzcd environment is not supported currently!

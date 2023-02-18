@@ -55,10 +55,20 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             """
             options = matched.group("options")
             contents = matched.group("contents")
+
+            contents = [s.strip() for s in contents.splitlines()]
+            contents_remain = []
+            if "" in contents:
+                contents_remain = contents[contents.index(""):]
+                contents = contents[:contents.index("")]
+
+            contents = "\n".join(contents)
             tikzcd = TikZcdObject(options, contents)
-            svg_str = tikzcd.write_to_svg().removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n")
-            
-            return f"<center>{svg_str}</center>"
+
+            # The string should not be splitted into lines, since markdown parser won't recognize it
+            svg_str = "".join(tikzcd.write_to_svg().removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n").splitlines())
+
+            return f"<center>{svg_str}</center>" + "\n    " + "\n".join(contents_remain)
 
         markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
         # fix possible use of "\theorem" when you don't need it
@@ -74,6 +84,8 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
 
         markdown = re.sub(r"((?<!\\)\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
         markdown = re.sub(r"\\\\tikzcd", r"\\tikzcd", markdown)
+
+        log.debug(f"markdown file: \n{markdown}")
 
         return markdown
 

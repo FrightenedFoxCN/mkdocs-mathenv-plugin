@@ -24,43 +24,19 @@ plugins:
         ...
 ```
 
-Currently only theorem is supported.
+Currently only theorem & tikzcd is supported.
 
 ### Theorem environment
 
-Set the paragraph as definition/lemma/theorem/proof/proposition by something like:
-
-```
-\theorem
-    here is a theorem
-```
-
-Configurations:
-
-- enable: boolean, whether the theorem environment is enabled
-- definition/lemma/theorem/proof/proposition: the string to show on title of the box
-
-Requires following markdown extensions:
-
-```
-markdown_extensions:
-  - admonition
-  - pymdownx.details
-  - pymdownx.superfences
-```
+Set the paragraph as definition/lemma/theorem/proof/proposition.
 
 ### TikZcd environment
 
-```
-\tikzcd
-    \mathsf{DA} \arrow[rr, bend left]{}{\bar 2} \arrow[dd]{}{U}& \perp & \mathsf{DA^{\mathrm{op}}} \arrow[ll, bend left]{}{\bar 2^{\mathrm{op}}}\arrow[dd]{}{U}\\
-    & & \\
-    \mathsf{Set} \arrow[rr, bend left]{}{2} & \perp & \mathsf{Set^{\mathrm{op}}} \arrow[ll, bend left]{}{2^{\mathrm{op}}}\\
-```
+Embedding commutative diagram into html.
 
 Requires xelatex and dvisvgm to work properly.
 
-We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage.
+Generation of the diagram may take a while, since it requires multiple intermediate stage.
 
 ## TODO
 
@@ -70,5 +46,6 @@ Too much things to do yet!
 - [ ] add tikz support via local compilation
 - [x] fix tikzcd picture problem
 - [ ] add tikzcd configurations: especially night mode
-- [ ] add svg support in css
+- [x] add svg support in css
 - [ ] fix theorem environment: \theorem in codeblock, etc.
+- [ ] fix the indented block after tikzcd

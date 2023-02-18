@@ -11,6 +11,15 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.tasklist
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_css:
+  - https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js
+  - js/katex.js
 
 plugins:
   - mathenv:
