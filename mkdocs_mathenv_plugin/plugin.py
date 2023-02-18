@@ -5,15 +5,14 @@ from mkdocs.plugins import BasePlugin
 from mkdocs.structure.pages import Page
 from mkdocs.structure.files import Files, File
 from mkdocs.config.defaults import MkDocsConfig
-from mkdocs.config import base, config_options
-from mkdocs.utils import log
+from mkdocs.config import base, config_options, Config
+from mkdocs.utils import log, copy_file
 
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from .tikzcd import TikZcdObject
 
 PLUGIN_DIR = os.path.dirname(os.path.realpath(__file__))
-TEMPLATE_DIR = os.path.join(PLUGIN_DIR, 'templates')
 
 class _TheoremOptions(base.Config):
     enable = config_options.Type(bool, default=True)
@@ -27,6 +26,9 @@ class MathEnvConfig(base.Config):
     theorem = config_options.SubConfig(_TheoremOptions)
 
 class MathEnvPlugin(BasePlugin[MathEnvConfig]):
+
+    def on_config(self, config: MkDocsConfig) -> Optional[Config]:
+        config["extra_css"] = ["css/svg.css"] + config["extra_css"]
 
     def on_pre_build(self, *, config: MkDocsConfig) -> None:
         """
@@ -56,7 +58,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             tikzcd = TikZcdObject(options, contents)
             svg_str = tikzcd.write_to_svg().removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n")
             
-            return f"<center><p style=\"background-color: wheat\">{svg_str}</p></center>"
+            return f"<center>{svg_str}</center>"
 
         markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
         # fix possible use of "\theorem" when you don't need it
@@ -79,3 +81,14 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
         """
         On each page, find the environment to replace and generate something
         """
+
+    def on_post_build(self, config: Dict[str, Any], **kwargs) -> None:
+        """
+        Add svg stylesheet support
+        """ 
+        files = ["css/svg.css"]
+        for file in files:
+            dest_file_path = os.path.join(config["site_dir"], file)
+            src_file_path = os.path.join(PLUGIN_DIR, file)
+            assert os.path.exists(src_file_path)
+            copy_file(src_file_path, dest_file_path)
