@@ -47,29 +47,16 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
         """
         On markdown, extend the theorem expression
         """
-        log.info(f"the file uris are {files.src_uris}")
-        log.info(f"current page is {page.file.src_uri}")
-
         def _replace_tikzcd(matched: re.Match[str]) -> str:
             """
             For each matched string, clean the first line label and transform it into html script 
             """
             options = matched.group("options")
             contents = matched.group("contents")
-            log.debug(f"matched option: {options}")
-            log.debug(f"matched option: {contents}")
             tikzcd = TikZcdObject(options, contents)
-            svg_name = tikzcd.write_to_svg()
-            log.debug(f"write to svg {svg_name}")
-            os.system
-            svg_file = File(
-                f"{svg_name}",
-                "",
-                f"docs/images",
-                False
-            )
-            files.append(svg_file)
-            return f"<center><img src=\"/images/{svg_name}\"/></center>"
+            svg_str = tikzcd.write_to_svg().removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n")
+            
+            return f"<center><p style=\"background-color: wheat\">{svg_str}</p></center>"
 
         markdown = re.sub(r"\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
         markdown = re.sub(r"\\lemma", "!!! success \"%s\"" % self.config.theorem.lemma, markdown)
@@ -77,7 +64,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
         markdown = re.sub(r"\\definition", "!!! info \"%s\"" % self.config.theorem.definition, markdown)
         markdown = re.sub(r"\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
 
-        markdown = re.sub(r"(?P<overall>\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )]*.*\n)*))", _replace_tikzcd, markdown)
+        markdown = re.sub(r"(\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
 
         return markdown
 

@@ -47,9 +47,9 @@ Configurations:
     \mathsf{Set} \arrow[rr, bend left]{}{2} & \perp & \mathsf{Set^{\mathrm{op}}} \arrow[ll, bend left]{}{2^{\mathrm{op}}}\\
 ```
 
-Warning: Build first if the svg file is not found
+Requires xelatex and dvisvgm to work properly.
 
-Requires xelatex and dvisvgm to work properly
+We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage.
 
 ## TODO
 
@@ -57,5 +57,6 @@ Too much things to do yet!
 
 - [ ] write specialized css for theorem environment
 - [ ] add tikz support via local compilation
-- [ ] fix tikzcd picture problem
+- [x] fix tikzcd picture problem
 - [ ] add tikzcd configurations: especially night mode
+- [ ] add svg support in css

@@ -11,7 +11,7 @@ def read(fname):
 
 setup(
     name='mkdocs-mathenv-plugin',
-    version='0.0.2',
+    version='0.0.5',
     author='FrightenedFoxCN',
     author_email='FrightenedFox@outlook.com',
     description='A MkDocs plugin that gives support for some math environments',

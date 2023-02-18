@@ -1,6 +1,7 @@
 from .tex import TeXWriter
 
 from hashlib import sha256
+import os
 
 class TikZcdObject:
     """
@@ -28,6 +29,15 @@ class TikZcdObject:
 
         writer.create_svg_from_tex(filename)
 
-        return f"{filename}.svg"
+        with open(f"{filename}.svg", "r", encoding="utf-8") as f:
+            svg_str = f.read(None)
+
+        # clean up
+        try:
+            os.remove(filename + ".svg")
+        except FileNotFoundError:
+            pass
+
+        return svg_str
 
         

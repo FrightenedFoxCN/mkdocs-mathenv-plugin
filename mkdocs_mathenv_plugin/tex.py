@@ -42,7 +42,9 @@ class TeXWriter:
         tex2pdf_cmd = " ".join((
             program,
             "-halt-on-error",
-            f"\"{tex_name}.tex\""
+            f"\"{tex_name}.tex\"",
+            ">",
+            os.devnull
         ))
 
         if os.system(tex2pdf_cmd):
@@ -55,7 +57,9 @@ class TeXWriter:
         pdf2svg_cmd = " ".join((
             "dvisvgm",
             "-P",
-            f"\"{tex_name}.pdf\""
+            f"\"{tex_name}.pdf\"",
+            ">",
+            os.devnull
         ))
         log.info(f"running {pdf2svg_cmd}")
         if os.system(pdf2svg_cmd):
@@ -65,7 +69,7 @@ class TeXWriter:
             raise TeXError("dvisvgm Error!")
 
         # clean up
-        for ext in (".log", ".aux"):
+        for ext in (".log", ".aux", ".pdf", ".tex"):
             try:
                 os.remove(tex_name + ext)
             except FileNotFoundError:
