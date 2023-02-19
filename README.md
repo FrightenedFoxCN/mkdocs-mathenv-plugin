@@ -45,7 +45,9 @@ Too much things to do yet!
 - [ ] write specialized css for theorem environment
 - [ ] add tikz support via local compilation
 - [x] fix tikzcd picture problem
-- [ ] add tikzcd configurations: especially night mode
+- [x] add tikzcd configurations: especially night mode
 - [x] add svg support in css
 - [ ] fix theorem environment: \theorem in codeblock, etc.
 - [ ] fix the indented block after tikzcd
+- [ ] add caching to tikzcd environment to accelerate generation.
+- [ ] more tikzcd configurations

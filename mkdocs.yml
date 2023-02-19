@@ -26,3 +26,5 @@ plugins:
       theorem:
        enable: true
        definition: "def"
+      tikzcd:
+        enable: true

@@ -22,8 +22,12 @@ class _TheoremOptions(base.Config):
     definition = config_options.Type(str, default="定义")
     proof = config_options.Type(str, default="证明")
 
+class _TikZcdOptions(base.Config):
+    enable = config_options.Type(bool, default=True)
+
 class MathEnvConfig(base.Config):
     theorem = config_options.SubConfig(_TheoremOptions)
+    tikzcd = config_options.SubConfig(_TikZcdOptions)
 
 class MathEnvPlugin(BasePlugin[MathEnvConfig]):
 
@@ -41,6 +45,8 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             log.debug("[mathenv] proposition titled with %s" % self.config.theorem.proposition)
             log.debug("[mathenv] definition titled with %s" % self.config.theorem.definition)
             log.debug("[mathenv] proof replaced with %s" % self.config.theorem.proof)
+        if self.config.tikzcd.enable:
+            log.debug("[mathenv] tikzcd enabled!")
         return config
 
 
@@ -70,20 +76,22 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
 
             return f"<center>{svg_str}</center>" + "\n    " + "\n".join(contents_remain)
 
-        markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
-        # fix possible use of "\theorem" when you don't need it
-        markdown = re.sub(r"\\\\theorem", r"\\theorem", markdown)
-        markdown = re.sub(r"(?<!\\)\\lemma", "!!! success \"%s\"" % self.config.theorem.lemma, markdown)
-        markdown = re.sub(r"\\\\lemma", r"\\lemma", markdown)
-        markdown = re.sub(r"(?<!\\)\\proposition", "!!! success \"%s\"" % self.config.theorem.proposition, markdown)
-        markdown = re.sub(r"\\\\proposition", r"\\proposition", markdown)
-        markdown = re.sub(r"(?<!\\)\\definition", "!!! info \"%s\"" % self.config.theorem.definition, markdown)
-        markdown = re.sub(r"\\\\definition", r"\\definition", markdown)
-        markdown = re.sub(r"(?<!\\)\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
-        markdown = re.sub(r"\\\\proof", r"\\proof", markdown)
+        if self.config.theorem.enable:
+            markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
+            # fix possible use of "\theorem" when you don't need it
+            markdown = re.sub(r"\\\\theorem", r"\\theorem", markdown)
+            markdown = re.sub(r"(?<!\\)\\lemma", "!!! success \"%s\"" % self.config.theorem.lemma, markdown)
+            markdown = re.sub(r"\\\\lemma", r"\\lemma", markdown)
+            markdown = re.sub(r"(?<!\\)\\proposition", "!!! success \"%s\"" % self.config.theorem.proposition, markdown)
+            markdown = re.sub(r"\\\\proposition", r"\\proposition", markdown)
+            markdown = re.sub(r"(?<!\\)\\definition", "!!! info \"%s\"" % self.config.theorem.definition, markdown)
+            markdown = re.sub(r"\\\\definition", r"\\definition", markdown)
+            markdown = re.sub(r"(?<!\\)\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
+            markdown = re.sub(r"\\\\proof", r"\\proof", markdown)
 
-        markdown = re.sub(r"((?<!\\)\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
-        markdown = re.sub(r"\\\\tikzcd", r"\\tikzcd", markdown)
+        if self.config.tikzcd.enable:
+            markdown = re.sub(r"((?<!\\)\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
+            markdown = re.sub(r"\\\\tikzcd", r"\\tikzcd", markdown)
 
         log.debug(f"markdown file: \n{markdown}")
 

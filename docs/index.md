@@ -87,6 +87,8 @@ Requires xelatex and dvisvgm to work properly.
 
 We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage.
 
+You can also use enable to control whether tikzcd is needed. True by default.
+
 TikZcd can be embedded into other environments:
 
 ```
