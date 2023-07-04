@@ -1,3 +1,4 @@
 mkdocs_mathenv_plugin.egg-info/*
 mkdocs_mathenv_plugin/__pycache__/*
 site/*
+cache/*

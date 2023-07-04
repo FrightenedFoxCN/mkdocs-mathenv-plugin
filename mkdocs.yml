@@ -28,3 +28,4 @@ plugins:
        definition: "def"
       tikzcd:
         enable: true
+        cachefile: true

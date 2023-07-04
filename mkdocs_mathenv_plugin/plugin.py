@@ -24,6 +24,7 @@ class _TheoremOptions(base.Config):
 
 class _TikZcdOptions(base.Config):
     enable = config_options.Type(bool, default=True)
+    cachefile = config_options.Type(bool, default=True)
 
 class MathEnvConfig(base.Config):
     theorem = config_options.SubConfig(_TheoremOptions)
@@ -47,9 +48,12 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             log.debug("[mathenv] proof replaced with %s" % self.config.theorem.proof)
         if self.config.tikzcd.enable:
             log.debug("[mathenv] tikzcd enabled!")
+        if self.config.tikzcd.cachefile:
+            log.debug("[mathenv] cache file enabled!")
+            if not os.path.exists("cache"):
+                os.mkdir("cache")
+                log.debug("[mathenv] created path cache/")
         return config
-
-
 
     def on_page_markdown(self, markdown: str, *, page: Page, config: MkDocsConfig, files: Files) -> Optional[str]:
         """
@@ -72,7 +76,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             tikzcd = TikZcdObject(options, contents)
 
             # The string should not be splitted into lines, since markdown parser won't recognize it
-            svg_str = "".join(tikzcd.write_to_svg().removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n").splitlines())
+            svg_str = "".join(tikzcd.write_to_svg(self.config.tikzcd.cachefile).removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n").splitlines())
 
             return f"<center>{svg_str}</center>" + "\n    " + "\n".join(contents_remain)
 

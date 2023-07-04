@@ -26,8 +26,11 @@ class TeXWriter:
             "\\end{document}"
         )) + "\n"
 
-        with open(f"{tex_name}.tex", "w", encoding="utf-8") as tex_file:
-            tex_file.write(full_tex)
+        try:
+            with open(f"{tex_name}.tex", "w", encoding="utf-8") as tex_file:
+                tex_file.write(full_tex)
+        except OSError:
+            log.error("[mathenv] unable to create tex file!")
 
     def create_svg_from_tex(self, tex_name: str) -> None:
         """
