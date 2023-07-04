@@ -19,10 +19,12 @@ plugins:
     - mathenv
         theorem:
             ...
+        tikzcd:
+            ...
         ...
 ```
 
-Currently only theorem is supported.
+Currently only theorem and tikzcd are supported.
 
 ### Theorem environment
 
@@ -85,7 +87,7 @@ markdown_extensions:
 
 Requires xelatex and dvisvgm to work properly.
 
-We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage.
+We use embedded svg diagram on the html file. Generation of the diagram may take a while, since it requires multiple intermediate stage. After generated once, with `cachefile` option set to true, the cached svg file will be in `cache` directory and would not rebuild unless the file has changed. No auto-cleaning of the deprecated cache file is available currently, so you'll have to clean & rebuild periodically for disk space (although it's not so large admittedly). 
 
 You can also use enable to control whether tikzcd is needed. True by default.
 

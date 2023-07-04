@@ -49,5 +49,6 @@ Too much things to do yet!
 - [x] add svg support in css
 - [ ] fix theorem environment: \theorem in codeblock, etc.
 - [ ] fix the indented block after tikzcd
-- [ ] add caching to tikzcd environment to accelerate generation.
+- [x] add caching to tikzcd environment to accelerate generation.
 - [ ] more tikzcd configurations
+- [ ] add alias system to replace the `\newcommand` like items in LaTeX
