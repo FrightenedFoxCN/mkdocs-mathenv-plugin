@@ -11,6 +11,7 @@ from mkdocs.utils import log, copy_file
 from typing import Optional, Dict, Any
 
 from .tikzcd import TikZcdObject
+from .markdown_utils import replace_standalone_words, replace_indented_block_start_with_options, get_indentation_level, return_to_indentation_level
 
 PLUGIN_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -26,9 +27,14 @@ class _TikZcdOptions(base.Config):
     enable = config_options.Type(bool, default=True)
     cachefile = config_options.Type(bool, default=True)
 
+class _AliasOptions(base.Config):
+    enable = config_options.Type(bool, default=True)
+    alias_list = config_options.Type(Dict, default={})
+
 class MathEnvConfig(base.Config):
     theorem = config_options.SubConfig(_TheoremOptions)
     tikzcd = config_options.SubConfig(_TikZcdOptions)
+    alias = config_options.SubConfig(_AliasOptions)
 
 class MathEnvPlugin(BasePlugin[MathEnvConfig]):
 
@@ -46,6 +52,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             log.debug("[mathenv] proposition titled with %s" % self.config.theorem.proposition)
             log.debug("[mathenv] definition titled with %s" % self.config.theorem.definition)
             log.debug("[mathenv] proof replaced with %s" % self.config.theorem.proof)
+
         if self.config.tikzcd.enable:
             log.debug("[mathenv] tikzcd enabled!")
         if self.config.tikzcd.cachefile:
@@ -53,6 +60,11 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             if not os.path.exists("cache"):
                 os.mkdir("cache")
                 log.debug("[mathenv] created path cache/")
+        
+        if self.config.alias.enable:
+            log.debug("[mathenv] alias enabled!")
+            log.debug(f"[mathenv] current alias list: {self.config.alias.alias_list}")
+        
         return config
 
     def on_page_markdown(self, markdown: str, *, page: Page, config: MkDocsConfig, files: Files) -> Optional[str]:
@@ -65,12 +77,19 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             """
             options = matched.group("options")
             contents = matched.group("contents")
+            first_line_indentation_level = get_indentation_level(matched.group("contents"))
 
-            contents = [s.strip() for s in contents.splitlines()]
+            # print(first_line_indentation_level)
+
+            contents = [i for i in contents.splitlines()]
+
             contents_remain = []
-            if "" in contents:
-                contents_remain = contents[contents.index(""):]
-                contents = contents[:contents.index("")]
+
+            for idx, i in enumerate(contents):
+                if get_indentation_level(i) < first_line_indentation_level:
+                    contents_remain = contents[idx:]
+                    contents = contents[:idx]
+                    break
 
             contents = "\n".join(contents)
             tikzcd = TikZcdObject(options, contents)
@@ -78,7 +97,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             # The string should not be splitted into lines, since markdown parser won't recognize it
             svg_str = "".join(tikzcd.write_to_svg(self.config.tikzcd.cachefile).removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n").splitlines())
 
-            return f"<center>{svg_str}</center>" + "\n    " + "\n".join(contents_remain)
+            return f"<center>{svg_str}</center>" + "\n" + "\n".join(contents_remain)
 
         if self.config.theorem.enable:
             markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
@@ -94,7 +113,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             markdown = re.sub(r"\\\\proof", r"\\proof", markdown)
 
         if self.config.tikzcd.enable:
-            markdown = re.sub(r"((?<!\\)\\tikzcd(\[(?P<options>.*)\])?.*\n(?P<contents>([\t(    )].*\n)*([\t(    )].*$)?))", _replace_tikzcd, markdown)
+            markdown = replace_indented_block_start_with_options(r"(?<!\\)\\tikzcd", _replace_tikzcd, markdown)
             markdown = re.sub(r"\\\\tikzcd", r"\\tikzcd", markdown)
 
         log.debug(f"markdown file: \n{markdown}")

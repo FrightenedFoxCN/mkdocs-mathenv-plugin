@@ -43,12 +43,12 @@ Generation of the diagram may take a while, since it requires multiple intermedi
 Too much things to do yet!
 
 - [ ] write specialized css for theorem environment
-- [ ] add tikz support via local compilation
+- [x] add tikz support via local compilation
 - [x] fix tikzcd picture problem
 - [x] add tikzcd configurations: especially night mode
 - [x] add svg support in css
 - [ ] fix theorem environment: \theorem in codeblock, etc.
-- [ ] fix the indented block after tikzcd
+- [x] fix the indented block after tikzcd
 - [x] add caching to tikzcd environment to accelerate generation.
 - [ ] more tikzcd configurations
 - [ ] add alias system to replace the `\newcommand` like items in LaTeX

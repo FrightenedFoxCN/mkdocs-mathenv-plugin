@@ -29,3 +29,6 @@ plugins:
       tikzcd:
         enable: true
         cachefile: true
+      alias:
+        enable: true
+        alias_list: {"key": "value", "key2": "value2"}

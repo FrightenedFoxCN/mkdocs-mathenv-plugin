@@ -101,6 +101,10 @@ TikZcd can be embedded into other environments:
         1 \arrow[rd]{}{i} \arrow[d]{}{\varepsilon}&      & 2\\
         \Sigma^\ast \arrow[r, dashed]{}{r} \arrow[d]{}{\alpha} & K \arrow[ru]{}{f} \arrow[r, dashed]{}{o} \arrow[d]{}{t} & 2^{\Sigma^\ast} \arrow[u]{}{\varepsilon?} \arrow[d]{}{\beta}\\
         (\Sigma^\ast)^\Sigma \arrow[r, dashed]{}{r^\Sigma} & K^\Sigma \arrow[r, dashed]{}{o^\Sigma} & (2^{\Sigma^\ast})^\Sigma
+
+    This can be viewed as an alternative definition.
+
+    ... catelogically, of course.
 ```
 
 \definition
@@ -111,5 +115,6 @@ TikZcd can be embedded into other environments:
         \Sigma^\ast \arrow[r, dashed]{}{r} \arrow[d]{}{\alpha} & K \arrow[ru]{}{f} \arrow[r, dashed]{}{o} \arrow[d]{}{t} & 2^{\Sigma^\ast} \arrow[u]{}{\varepsilon?} \arrow[d]{}{\beta}\\
         (\Sigma^\ast)^\Sigma \arrow[r, dashed]{}{r^\Sigma} & K^\Sigma \arrow[r, dashed]{}{o^\Sigma} & (2^{\Sigma^\ast})^\Sigma
 
-!!! warning
-    An indented block after tikzcd environment is not supported currently!
+    This can be viewed as an alternative definition.
+
+    ... catelogically, of course.
