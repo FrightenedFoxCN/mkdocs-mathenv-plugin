@@ -22,6 +22,7 @@ class _TheoremOptions(base.Config):
     proposition = config_options.Type(str, default="命题")
     definition = config_options.Type(str, default="定义")
     proof = config_options.Type(str, default="证明")
+    exercise = config_options.Type(str, default="习题")
 
 class _TikZcdOptions(base.Config):
     enable = config_options.Type(bool, default=True)
@@ -111,6 +112,8 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             markdown = re.sub(r"\\\\definition", r"\\definition", markdown)
             markdown = re.sub(r"(?<!\\)\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
             markdown = re.sub(r"\\\\proof", r"\\proof", markdown)
+            markdown = re.sub(r"(?<!\\)\\exercise", "!!! question \"%s\"" % self.config.theorem.exercise, markdown)
+            markdown = re.sub(r"\\\\exercise", r"\\exercise", markdown)
 
         if self.config.tikzcd.enable:
             markdown = replace_indented_block_start_with_options(r"(?<!\\)\\tikzcd", _replace_tikzcd, markdown)
