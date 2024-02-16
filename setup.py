@@ -43,7 +43,8 @@ setup(
     packages=find_packages(),
     package_data={
         'mkdocs_mathenv_plugin': [
-            'templates/*.html'
+            'templates/*.html',
+            'css/*.css'
         ]
     }
 )
