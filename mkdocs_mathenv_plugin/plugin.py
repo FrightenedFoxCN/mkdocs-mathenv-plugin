@@ -11,7 +11,7 @@ from mkdocs.utils import log, copy_file
 from typing import Optional, Dict, Any
 
 from .tikzcd import TikZcdObject
-from .markdown_utils import replace_standalone_words, replace_indented_block_start_with_options, get_indentation_level, return_to_indentation_level
+from .markdown_utils import replace_indented_block_start_with_options, get_indentation_level
 
 PLUGIN_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -80,8 +80,6 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             contents = matched.group("contents")
             first_line_indentation_level = get_indentation_level(matched.group("contents"))
 
-            print(first_line_indentation_level)
-
             contents = [i for i in contents.splitlines()]
 
             contents_remain = []
@@ -98,7 +96,7 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             # The string should not be splitted into lines, since markdown parser won't recognize it
             svg_str = "".join(tikzcd.write_to_svg(self.config.tikzcd.cachefile).removeprefix("<?xml version='1.0' encoding='UTF-8'?>\n").splitlines())
 
-            return f"<center>{svg_str}</center>" + "\n" + "\n".join(contents_remain)
+            return matched.group("leading") + f"<center>{svg_str}</center>" + "\n" + "\n".join(contents_remain)
 
         if self.config.theorem.enable:
             markdown = re.sub(r"(?<!\\)\\theorem", "!!! success \"%s\"" % self.config.theorem.theorem, markdown)
@@ -141,6 +139,6 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
         for file in files:
             dest_file_path = os.path.join(config["site_dir"], file)
             src_file_path = os.path.join(PLUGIN_DIR, file)
-            print(src_file_path)
+            # print(src_file_path)
             assert os.path.exists(src_file_path)
             copy_file(src_file_path, dest_file_path)
