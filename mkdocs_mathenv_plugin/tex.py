@@ -37,12 +37,12 @@ class TeXWriter:
         Generate svg from tex file
         """
         if self.config.compiler == "xelatex":
-            program = "xelatex"
+            program = "xelatex -no-pdf"
         else:
             raise NotImplementedError(f"Compiler {self.config.compiler} is not implemented!")
 
         # use compiler to transform tex to pdf
-        tex2pdf_cmd = " ".join((
+        tex2xdv_cmd = " ".join((
             program,
             "-halt-on-error",
             f"\"{tex_name}.tex\"",
@@ -50,29 +50,31 @@ class TeXWriter:
             os.devnull
         ))
 
-        if os.system(tex2pdf_cmd):
+        if os.system(tex2xdv_cmd):
             log.error(
                 "LaTeX Error! Not a worry, it happens to the best of us."
             )
             raise TeXError("LaTeX Error! Look into log file for detail")
 
         # use dvisvgm to transform pdf to svg
-        pdf2svg_cmd = " ".join((
+        xdv2svg_cmd = " ".join((
             "dvisvgm",
-            "-P --no-fonts",
-            f"\"{tex_name}.pdf\"",
+            f"\"{tex_name}.xdv\"",
+            "-n",
+            "-v 0",
+            f"-o \"{tex_name}.svg\"",
             ">",
             os.devnull
         ))
-        log.info(f"running {pdf2svg_cmd}")
-        if os.system(pdf2svg_cmd):
+        log.info(f"running {xdv2svg_cmd}")
+        if os.system(xdv2svg_cmd):
             log.error(
                 "dvisvgm Error!"
             )
             raise TeXError("dvisvgm Error!")
 
         # clean up
-        for ext in (".log", ".aux", ".pdf", ".tex"):
+        for ext in (".log", ".aux", ".pdf", ".tex", ".xdv"):
             try:
                 os.remove(tex_name + ext)
             except FileNotFoundError:
