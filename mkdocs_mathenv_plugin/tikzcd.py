@@ -30,7 +30,7 @@ class TikZcdObject:
 
         writer = TeXWriter()
         writer.config.preamble = r'''
-\documentclass{standalone}
+\documentclass[dvisvgm]{standalone}
 \usepackage{tikz}
 \usepackage{amssymb}
 \usetikzlibrary{cd}
