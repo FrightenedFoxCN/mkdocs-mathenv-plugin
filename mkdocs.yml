@@ -24,8 +24,9 @@ extra_javascript:
 plugins:
   - mathenv:
       theorem:
-       enable: true
-       definition: "def"
+        enable: true
+        definition: "def"
+        proof_autofold: false
       tikzcd:
         enable: true
         cachefile: true

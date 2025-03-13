@@ -22,6 +22,7 @@ class _TheoremOptions(base.Config):
     proposition = config_options.Type(str, default="命题")
     definition = config_options.Type(str, default="定义")
     proof = config_options.Type(str, default="证明")
+    proof_autofold = config_options.Type(bool, default=False)
     exercise = config_options.Type(str, default="习题")
 
 class _TikZcdOptions(base.Config):
@@ -53,6 +54,8 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             log.debug("[mathenv] proposition titled with %s" % self.config.theorem.proposition)
             log.debug("[mathenv] definition titled with %s" % self.config.theorem.definition)
             log.debug("[mathenv] proof replaced with %s" % self.config.theorem.proof)
+            if self.config.theorem.proof_autofold:
+                log.debug("[mathenv] proof autofold enabled!")
 
         if self.config.tikzcd.enable:
             log.debug("[mathenv] tikzcd enabled!")
@@ -108,7 +111,10 @@ class MathEnvPlugin(BasePlugin[MathEnvConfig]):
             markdown = re.sub(r"\\\\proposition", r"\\proposition", markdown)
             markdown = re.sub(r"(?<!\\)\\definition", "!!! info \"%s\"" % self.config.theorem.definition, markdown)
             markdown = re.sub(r"\\\\definition", r"\\definition", markdown)
-            markdown = re.sub(r"(?<!\\)\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
+            if self.config.theorem.proof_autofold:
+                markdown = re.sub(r"(?<!\\)\\proof", "??? info \"%s\"" % self.config.theorem.proof, markdown)
+            else:
+                markdown = re.sub(r"(?<!\\)\\proof", "???+ info \"%s\"" % self.config.theorem.proof, markdown)
             markdown = re.sub(r"\\\\proof", r"\\proof", markdown)
             markdown = re.sub(r"(?<!\\)\\exercise", "!!! question \"%s\"" % self.config.theorem.exercise, markdown)
             markdown = re.sub(r"\\\\exercise", r"\\exercise", markdown)
